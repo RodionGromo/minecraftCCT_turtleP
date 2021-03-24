@@ -6,9 +6,14 @@ global cnt
 cnt = 0;
 
 def parseJSONrecv(msg):
-	pJSON = json.loads(msg);
-	pJSONkeys = pJSON.keys();
-	pJSONRkeys = [];
+	print(msg)
+	try:
+		pJSON = json.loads(msg);
+		pJSONkeys = pJSON.keys();
+		pJSONRkeys = [];
+	except:
+		return msg
+
 	for key in pJSONkeys:
 		pJSONRkeys.append(key)
 	if pJSONRkeys[0] == 'message':
@@ -17,6 +22,8 @@ def parseJSONrecv(msg):
 		return 'Fuel left: ' + pJSON['fuelAmount']
 	elif pJSONRkeys[0] == 'status':
 		return 'Returned status: ' + pJSON['status']
+	else:
+		return pJSON
 	pass
 
 async def basicServer(websocket, path):
