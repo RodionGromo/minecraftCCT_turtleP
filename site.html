@@ -1,0 +1,89 @@
+<head>
+	<meta charset="utf-8">
+</head>
+<body>
+	<input type='button' id='autoFuelB' onclick="changeAuto()" value="Проверка топлива: авто."></button>
+	<div id='fuelText'></div>
+	<input type="text" name="Своя команда" id='CICF' pattern="Введите команду"> 
+	<button id='sendCmd' onclick="sendCstmCommand()">Отправить</button>
+	<script>
+		var button = document.getElementById('autoFuelB')
+		var fuelText = document.getElementById('fuelText')
+		var customCmdField = document.getElementById('CICF')
+		var fuel = 0;
+		var autoFuel = true;
+
+		function sendCstmCommand() {
+			//customCmdField.value
+			if(customCmdField.value != '') {
+				sendCommand(customCmdField.value)
+				customCmdField.value = ''
+			}
+		}
+
+		setInterval(() => {
+			if(autoFuel) {
+				getVar('fuel')
+				fuelText.innerHTML = 'Топлива осталось: ' + fuel;
+			}
+		},1000)
+
+		function changeAuto() {
+			autoFuel = !autoFuel
+			if(autoFuel) {
+				button.value = 'Проверка топлива: автом.'
+			} else {
+				button.value = 'Проверка топлива: откл.'
+			}
+		}
+
+		function getVar(vartoget) {
+			var xhr = new XMLHttpRequest();
+			if(vartoget == 'fuel') {
+				xhr.open("GET",`http://localhost:8000/yield/${vartoget}/`)
+				xhr.send()
+				parseXHR(xhr,vartoget)
+			}
+		}
+
+		function sendCommand(command) {
+			var xhr = new XMLHttpRequest()
+			xhr.open("GET",`http://localhost:8000/command/${command}/`)
+			xhr.send()
+			parseXHR(xhr,'bool')
+		}
+
+		function parseXHR(xhr,type) {
+			setTimeout(() => {
+				var status = getStatus(xhr.status)
+				if(!status) {
+					console.log('parse not available')
+				} else if(status) {
+					if(type == 'fuel') {
+						fuel = xhr.responseText
+					} else if(type == 'bool') {
+						latestStatus = getBoolFromString(xhr.responseText);
+					}
+				}
+			},400)
+		}
+
+		function getBoolFromString(string) {
+			string = string.toLowerCase()
+			if(string == 'true') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		function getStatus(status) {
+			console.log(status)
+			if(status == 200) {
+				return true
+			} else {
+				return false
+			}
+		}
+	</script>
+</body>
