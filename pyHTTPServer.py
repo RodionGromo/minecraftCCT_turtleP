@@ -1,5 +1,3 @@
-import asyncio
-import websockets
 import json
 from flask import Flask,redirect
 httpport = 8000
