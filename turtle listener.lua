@@ -1,3 +1,4 @@
+-- pastebin link: https://pastebin.com/ZHwX3w9q
 print("Don't forget F3 + P!");
 local httpServer = 'http://localhost:8000/'
 local text = ''
