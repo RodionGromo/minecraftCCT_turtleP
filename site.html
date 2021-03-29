@@ -6,26 +6,36 @@
 	<div id='fuelText'></div>
 	<input type="text" name="Своя команда" id='CICF' pattern="Введите команду"> 
 	<button id='sendCmd' onclick="sendCstmCommand()">Отправить</button>
+	<input type="text" name="ID черепашки" id='turtleIF'>
+	<div id='availTID'></div>
 	<script>
 		var button = document.getElementById('autoFuelB')
 		var fuelText = document.getElementById('fuelText')
 		var customCmdField = document.getElementById('CICF')
+		var availableTurtileId = document.getElementById('availTID')
+		var turtleIdF = document.getElementById('turtleIF') 
 		var fuel = 0;
 		var autoFuel = true;
-
+		var obj,string12;
 		function sendCstmCommand() {
 			//customCmdField.value
 			if(customCmdField.value != '') {
-				sendCommand(customCmdField.value)
+				sendCommand(customCmdField.value,turtleIdF.value)
 				customCmdField.value = ''
 			}
 		}
 
 		setInterval(() => {
 			if(autoFuel) {
-				getVar('fuel')
-				fuelText.innerHTML = 'Топлива осталось: ' + fuel;
+				if(turtleIF.value != "") {
+					getVar('fuel','1')
+					fuelText.innerHTML = 'Топлива осталось: <br />' + fuel;
+				}
 			}
+			buf1 = getTurtles()
+			setTimeout(() => {
+				availableTurtileId.innerHTML = string12
+			},400)
 		},1000)
 
 		function changeAuto() {
@@ -37,18 +47,46 @@
 			}
 		}
 
-		function getVar(vartoget) {
+		function getTurtles() {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET","http://25.84.31.18:8000/getAllTurtles")
+			xhr.send()
+			setTimeout(()=> {
+				responseText = xhr.responseText
+				btf = beautifyResponse(xhr.responseText)
+				return btf
+			},400)
+		}
+
+		function beautifyResponse(object) {
+			object = JSON.parse(object)
+			obj = object.value
+			string = ''
+			for(var i = 0; i < obj.length;i++) {
+				string += 'ID: ' + obj[i].id + '<br>'
+				string += 'Топливо: ' + obj[i].fuel + '<br>'
+				string += 'XYZ позиция: ' + beautifyPos(obj[i].pos)  + '<br><br>'
+ 			}
+ 			string12 = string
+ 			return String(string)
+		}
+
+		function beautifyPos(posArr) {
+			return posArr[0] + ',' + posArr[1] + ',' + posArr[2]
+		}
+
+		function getVar(vartoget,turtleId) {
 			var xhr = new XMLHttpRequest();
 			if(vartoget == 'fuel') {
-				xhr.open("GET",`http://localhost:8000/yield/${vartoget}/`)
+				xhr.open("GET",`http://25.84.31.18:8000/yield/${vartoget}/${turtleId}`)
 				xhr.send()
 				parseXHR(xhr,vartoget)
 			}
 		}
 
-		function sendCommand(command) {
+		function sendCommand(command,turtleId) {
 			var xhr = new XMLHttpRequest()
-			xhr.open("GET",`http://localhost:8000/command/${command}/`)
+			xhr.open("GET",`http://25.84.31.18:8000/command/${command}/${turtleId}`)
 			xhr.send()
 			parseXHR(xhr,'bool')
 		}
@@ -60,7 +98,8 @@
 					console.log('parse not available')
 				} else if(status) {
 					if(type == 'fuel') {
-						fuel = xhr.responseText
+						buf1 = JSON.parse(xhr.responseText)
+						fuel = buf1.value
 					} else if(type == 'bool') {
 						latestStatus = getBoolFromString(xhr.responseText);
 					}
