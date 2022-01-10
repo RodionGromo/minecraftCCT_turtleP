@@ -5,3 +5,6 @@ Branch Python_Version made for HTTP server implementation in Python
 ## Currently stable with:
 - newWebsocketServer.py
 - turtleLua.lua
+## Outdated:
+- pyHTTPServer.py
+- turtle listener.lua
