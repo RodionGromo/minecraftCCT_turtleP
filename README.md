@@ -1,4 +1,4 @@
 # minecraftCCT_turtleP
-Websocket implementation of server for Turtles and websites
+Webosocket server for controling turtles over internet!
 
 
