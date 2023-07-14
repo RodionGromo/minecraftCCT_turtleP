@@ -1,29 +1,23 @@
+<!DOCTYPE html>
+<html>
 <head>
-	<title>Едрен батон вебсайт для websocketа</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Turtle control site</title>
 </head>
 <body>
-	<p id="returnText">Тут будет текст после выполнения команд с бота</p>
-	<p id="turtlesID">Тут будут id черепах когда websocket проснется</p>
-	<p id="SelfIDText">Тут будет твой id</p>
-	<button id="sendCmd" onclick="sendCmd()">Отправить команду</button>
-	<button id="updateBots" onclick="updateRobots()">Обновить ботов</button>
-	<input type="text" name="ID черепахи" id="turtleID">
-	<input type="text" name="Команда" id="command">
-	<script src="./websocketCl.js"></script>
-	<button onclick="destroyConnection()">Отключиться от websocket'а</button>
-	<button onclick="action('turnLeft')">Повернуть налево</button>
-	<button onclick="action('forward')">Вперед</button>
-	<button onclick="action('back')">Назад</button>
-	<button onclick="action('turnRight')">Повернуть направо</button>
-	<button onclick="action('up')">Вверх</button>
-	<button onclick="action('down')">Вниз</button>
-	<button onclick="action('dig')">Выкопать</button>
-	<button onclick="action('digUp')">Выкопать вверх</button>
-	<button onclick="action('digDown')">Выкопать вниз</button>
-	<button onclick="action('getItemDetail')">Что в руке?</button>
-	<button onclick="actionAdv('nextSlot')">Слот вперед</button>
-	<button onclick="actionAdv('prevSlot')">Слот назад</button>
-	<button onclick="action('place')">Поставить</button>
-	<button onclick="action('placeUp')">Поставить вверх</button>
-	<button onclick="action('placeDown')">Поставить вниз</button>
+	<h1 align="center">Gigaturtle Control Webpage</h1>
+	<button onclick="get_turtles()">Refresh available turtles</button>
+	<div id="available_turtles">waiting for turtles</div><br>
+	<div>Enter turtle ID: <input placeholder="ID here" id="id_input"></input>
+		<button onclick="preload_turtle()">Load turtle data</button></div>
+	<div id="current_turtle_fuel">here will be fuel of selected turtle</div><br>
+	<div>Send a command: <input placeholder="Write command here" id="command_input"></input>
+		<button onclick="send_turtle_command()">Send</button></div>
+	<button onclick="fastCommand('turtle.turnLeft()')">Turn left</button>
+	<button onclick="fastCommand('turtle.turnRight()')">Turn right</button>
+	<button onclick="fastCommand('turtle.forward()')">Forward</button>
+
+	<script src="./site_script.js"></script>
 </body>
+</html>
